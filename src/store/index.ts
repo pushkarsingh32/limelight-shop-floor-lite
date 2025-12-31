@@ -86,13 +86,15 @@ export const useStore = create<AppState>((set, get) => ({
     set({ downtimeEntries: entries });
 
     if (!entry.synced) {
-      const queue = get().syncQueue;
-      queue.push({
-        id: entry.id,
-        type: 'downtime',
-        data: entry,
-        timestamp: Date.now(),
-      });
+      const queue = [
+        ...get().syncQueue,
+        {
+          id: entry.id,
+          type: 'downtime',
+          data: entry,
+          timestamp: Date.now(),
+        },
+      ];
       await AsyncStorage.setItem('syncQueue', JSON.stringify(queue));
       set({ syncQueue: queue });
 
@@ -111,23 +113,30 @@ export const useStore = create<AppState>((set, get) => ({
 
     const entry = entries.find((e) => e.id === id);
     if (entry && !entry.synced) {
-      const queue = get().syncQueue;
-      const existingIndex = queue.findIndex(q => q.id === id);
-      if (existingIndex >= 0) {
-        queue[existingIndex] = {
-          id: entry.id,
-          type: 'downtime',
-          data: entry,
-          timestamp: Date.now(),
-        };
-      } else {
-        queue.push({
-          id: entry.id,
-          type: 'downtime',
-          data: entry,
-          timestamp: Date.now(),
-        });
-      }
+      const currentQueue = get().syncQueue;
+      const existingIndex = currentQueue.findIndex(q => q.id === id);
+
+      const queue = existingIndex >= 0
+        ? currentQueue.map((item, idx) =>
+            idx === existingIndex
+              ? {
+                  id: entry.id,
+                  type: 'downtime' as const,
+                  data: entry,
+                  timestamp: Date.now(),
+                }
+              : item
+          )
+        : [
+            ...currentQueue,
+            {
+              id: entry.id,
+              type: 'downtime' as const,
+              data: entry,
+              timestamp: Date.now(),
+            },
+          ];
+
       await AsyncStorage.setItem('syncQueue', JSON.stringify(queue));
       set({ syncQueue: queue });
 
@@ -149,13 +158,15 @@ export const useStore = create<AppState>((set, get) => ({
 
     const item = items.find((i) => i.id === id);
     if (item) {
-      const queue = get().syncQueue;
-      queue.push({
-        id: item.id,
-        type: 'maintenance',
-        data: item,
-        timestamp: Date.now(),
-      });
+      const queue = [
+        ...get().syncQueue,
+        {
+          id: item.id,
+          type: 'maintenance' as const,
+          data: item,
+          timestamp: Date.now(),
+        },
+      ];
       await AsyncStorage.setItem('syncQueue', JSON.stringify(queue));
       set({ syncQueue: queue });
 
@@ -177,13 +188,15 @@ export const useStore = create<AppState>((set, get) => ({
 
     const alert = alerts.find((a) => a.id === id);
     if (alert) {
-      const queue = get().syncQueue;
-      queue.push({
-        id: alert.id,
-        type: 'alert',
-        data: alert,
-        timestamp: Date.now(),
-      });
+      const queue = [
+        ...get().syncQueue,
+        {
+          id: alert.id,
+          type: 'alert' as const,
+          data: alert,
+          timestamp: Date.now(),
+        },
+      ];
       await AsyncStorage.setItem('syncQueue', JSON.stringify(queue));
       set({ syncQueue: queue });
 

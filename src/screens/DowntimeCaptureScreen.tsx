@@ -29,7 +29,7 @@ export default function DowntimeCaptureScreen({
   route,
 }: DowntimeCaptureScreenProps) {
   const { machine } = route.params;
-  const [step, setStep] = useState<'idle' | 'selecting' | 'running'>('idle');
+  const [step, setStep] = useState<'idle' | 'selecting' | 'running'>('selecting');
   const [selectedReason, setSelectedReason] = useState<any>(null);
   const [selectedSubReason, setSelectedSubReason] = useState<any>(null);
   const [photo, setPhoto] = useState<string | null>(null);
@@ -69,7 +69,7 @@ export default function DowntimeCaptureScreen({
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: false,
       quality: 0.8,
     });
 
@@ -91,7 +91,7 @@ export default function DowntimeCaptureScreen({
     }
 
     const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
+      allowsEditing: false,
       quality: 0.8,
     });
 

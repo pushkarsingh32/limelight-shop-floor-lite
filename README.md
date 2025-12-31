@@ -223,17 +223,6 @@ src/
 └── components/        # Reusable components (future)
 ```
 
-## Future Enhancements
-
-- Real API integration with authentication
-- Push notifications for critical alerts
-- Offline photo queue (base64 encoding)
-- Export reports to PDF
-- Multi-shift tracking
-- Advanced analytics and trends
-- Barcode/QR scanning for machines
-- Voice notes for maintenance
-
 ## License
 
 MIT

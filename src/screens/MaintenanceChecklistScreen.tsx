@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -25,8 +25,10 @@ export default function MaintenanceChecklistScreen({
   route,
 }: MaintenanceChecklistScreenProps) {
   const { machine } = route.params;
-  const maintenanceItems = useStore((state) =>
-    state.maintenanceItems.filter((item) => item.machineId === machine.id)
+  const allMaintenanceItems = useStore((state) => state.maintenanceItems);
+  const maintenanceItems = useMemo(
+    () => allMaintenanceItems.filter((item) => item.machineId === machine.id),
+    [allMaintenanceItems, machine.id]
   );
   const updateMaintenanceItem = useStore((state) => state.updateMaintenanceItem);
 
