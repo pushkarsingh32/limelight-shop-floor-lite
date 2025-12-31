@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useStore } from './src/store';
 
 // Screens
@@ -16,6 +18,24 @@ import SummaryReportsScreen from './src/screens/SummaryReportsScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Simple icon component using emoji/text
+const TabIcon = ({ focused, label }: { focused: boolean; label: string }) => {
+  const getIcon = () => {
+    switch (label) {
+      case 'Machines':
+        return '⚙️';
+      case 'Alerts':
+        return '🔔';
+      case 'Summary':
+        return '📊';
+      default:
+        return '•';
+    }
+  };
+
+  return <Text style={{ fontSize: 24 }}>{getIcon()}</Text>;
+};
+
 function OperatorTabs() {
   return (
     <Tab.Navigator
@@ -28,12 +48,18 @@ function OperatorTabs() {
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ tabBarLabel: 'Machines' }}
+        options={{
+          tabBarLabel: 'Machines',
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="Machines" />,
+        }}
       />
       <Tab.Screen
         name="Summary"
         component={SummaryReportsScreen}
-        options={{ tabBarLabel: 'Summary' }}
+        options={{
+          tabBarLabel: 'Summary',
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="Summary" />,
+        }}
       />
     </Tab.Navigator>
   );
@@ -51,17 +77,26 @@ function SupervisorTabs() {
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ tabBarLabel: 'Machines' }}
+        options={{
+          tabBarLabel: 'Machines',
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="Machines" />,
+        }}
       />
       <Tab.Screen
         name="Alerts"
         component={AlertManagementScreen}
-        options={{ tabBarLabel: 'Alerts' }}
+        options={{
+          tabBarLabel: 'Alerts',
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="Alerts" />,
+        }}
       />
       <Tab.Screen
         name="Summary"
         component={SummaryReportsScreen}
-        options={{ tabBarLabel: 'Summary' }}
+        options={{
+          tabBarLabel: 'Summary',
+          tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="Summary" />,
+        }}
       />
     </Tab.Navigator>
   );
@@ -105,8 +140,10 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      {isAuthenticated ? <MainStack /> : <LoginScreen />}
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        {isAuthenticated ? <MainStack /> : <LoginScreen />}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
